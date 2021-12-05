@@ -34,6 +34,10 @@ def collect_data(cat_type=2):
             offset += batch_size
             
             data = response.json()
+            
+            if data.get('error') == 2:
+                break
+                
             items = data.get('items')
             
             for i in items:
@@ -55,10 +59,7 @@ def collect_data(cat_type=2):
         count += 1
         print(f'Page #{count}')
         print(url)
-        
-        if len(items) < 60:
-            break
-    
+            
     with open('result.json', 'w') as file:
         json.dump(result, file, indent=4, ensure_ascii=False)
         
