@@ -21,30 +21,18 @@ async def start(message: types.Message):
 
 @dp.message_handler(Text(equals='🔪 Ножи'))
 async def get_discount_knives(message: types.Message):
-    await message.answer('Please waiting...')
-    
-    collect_data(cat_type=2)
-    
-    with open('result.json') as file:
-        data = json.load(file)
-        
-    for index, item in enumerate(data):
-        card = f'{hlink(item.get("full_name"), item.get("3d"))}\n' \
-            f'{hbold("Скидка: ")}{item.get("overprice")}%\n' \
-            f'{hbold("Цена: ")}${item.get("item_price")}🔥'
-    
-    
-        if index%20 == 0:
-            time.sleep(3)
-            
-        await message.answer(card)
+    await get_discount(cat_type=2)
         
         
 @dp.message_handler(Text(equals='🔫 Снайперские винтовки'))
 async def get_discount_guns(message: types.Message):
+    await get_discount(cat_type=4)
+
+    
+async def get_discount(cat_type=2):
     await message.answer('Please waiting...')
     
-    collect_data(cat_type=4)
+    collect_data(cat_type=cat_type)
     
     with open('result.json') as file:
         data = json.load(file)
@@ -54,12 +42,10 @@ async def get_discount_guns(message: types.Message):
             f'{hbold("Скидка: ")}{item.get("overprice")}%\n' \
             f'{hbold("Цена: ")}${item.get("item_price")}🔥'
     
-    
         if index%20 == 0:
             time.sleep(3)
             
-        await message.answer(card)
-
+        await message.answer(card)    
     
 def main():
     executor.start_polling(dp)
