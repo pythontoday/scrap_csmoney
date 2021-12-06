@@ -4,7 +4,7 @@ from aiogram.dispatcher.filters import Text
 from aiogram.utils.markdown import hbold, hlink
 from main import collect_data
 import os
-import time
+import asyncio
 
 bot = Bot(token=os.getenv('TOKEN'), parse_mode=types.ParseMode.HTML)
 dp = Dispatcher(bot)
@@ -35,7 +35,7 @@ async def get_discount_knives(message: types.Message):
     
     
         if index%20 == 0:
-            time.sleep(3)
+            asyncio.sleep(3)
             
         await message.answer(card)
         
