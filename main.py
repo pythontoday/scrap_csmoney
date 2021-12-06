@@ -7,13 +7,6 @@ ua = UserAgent()
 
 
 def collect_data(cat_type=2):
-    # response = requests.get(
-    #     url='https://inventories.cs.money/5.0/load_bots_inventory/730?buyBonus=40&hasTradeLock=false&hasTradeLock=true&isStore=true&limit=60&maxPrice=10000&minPrice=1&offset=0&tradeLockDays=1&tradeLockDays=2&tradeLockDays=3&tradeLockDays=4&tradeLockDays=5&tradeLockDays=6&tradeLockDays=7&tradeLockDays=0&type=2&withStack=true',
-    #     headers={'user-agent': f'{ua.random}'}
-    # )
-    
-    # with open('result.json', 'w') as file:
-    #     json.dump(response.json(), file, indent=4, ensure_ascii=False)
 
     offset = 0
     batch_size = 60
@@ -22,8 +15,6 @@ def collect_data(cat_type=2):
     
     while True:
         for item in range(offset, offset + batch_size, 60):
-            # url = item
-            # print(url)
             
             url = f'https://inventories.cs.money/5.0/load_bots_inventory/730?buyBonus=40&hasTradeLock=false&hasTradeLock=true&isStore=true&limit=60&maxPrice=10000&minPrice=2000&offset={item}&tradeLockDays=1&tradeLockDays=2&tradeLockDays=3&tradeLockDays=4&tradeLockDays=5&tradeLockDays=6&tradeLockDays=7&tradeLockDays=0&type={cat_type}&withStack=true'
             response = requests.get(
@@ -34,6 +25,10 @@ def collect_data(cat_type=2):
             offset += batch_size
             
             data = response.json()
+            
+            if data.get('error') == 2:
+                return 'Data were collected'
+            
             items = data.get('items')
             
             for i in items:
@@ -55,9 +50,6 @@ def collect_data(cat_type=2):
         count += 1
         print(f'Page #{count}')
         print(url)
-        
-        if len(items) < 60:
-            break
     
     with open('result.json', 'w') as file:
         json.dump(result, file, indent=4, ensure_ascii=False)
@@ -66,7 +58,7 @@ def collect_data(cat_type=2):
     
     
 def main():
-    collect_data()
+    print(collect_data())
     
     
 if __name__ == '__main__':
