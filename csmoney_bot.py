@@ -56,7 +56,7 @@ async def get_discount_guns(message: types.Message):
     
     
         if index%20 == 0:
-            time.sleep(3)
+            asyncio.sleep(3)
             
         await message.answer(card)
 
