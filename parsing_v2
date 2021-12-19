@@ -1,0 +1,26 @@
+from fake_useragent import UserAgent
+import requests, json
+
+ua = UserAgent()
+
+def collect_data(cat_type=2):
+    offset = 0; step = 60; result = []
+
+    while True:
+        try:
+            for item in range(offset, offset + step, step):
+                url = f'https://inventories.cs.money/5.0/load_bots_inventory/730?buyBonus=40&hasTradeLock=false&hasTradeLock=true&isStore=true&limit=60&maxPrice=10000&minPrice=2000&offset={item}&tradeLockDays=1&tradeLockDays=2&tradeLockDays=3&tradeLockDays=4&tradeLockDays=5&tradeLockDays=6&tradeLockDays=7&tradeLockDays=0&type={cat_type}&withStack=true'
+                data = (requests.get(url=url, headers={'user-agent': f'{ua.random}'}).json())['items']; offset += step
+
+                res = [{'full_name': y['fullName'], '3d': y['3d'], 'overprice': y['price'], 'item_price': y['overprice']}
+                       for y in [x for x in data if len(data) <= 60] if y['overprice'] is not None and y['overprice'] < -10]
+
+                for i in res: result.append(i)
+
+        except KeyError: break
+
+    with open('result.json', 'w', encoding='utf-8') as file:
+        json.dump(result, file, indent=4, ensure_ascii=False)
+
+if __name__ == '__main__':
+    collect_data()
